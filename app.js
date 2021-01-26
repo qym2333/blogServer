@@ -64,7 +64,7 @@ fs.readdirSync(dirname).forEach((i) => {
 app.use((err, req, res, next) => {
     //Token过期
     if (err.name === 'UnauthorizedError') {
-        res.status(err.status || 401);
+        // res.status(err.status || 401);
         res.send({
             message: 'token过期，请重新登录！',
             code: 401,

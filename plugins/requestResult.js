@@ -3,17 +3,17 @@
  * @param {All} data 数据/信息
  * @param {Number} status 状态码 0:成功/1:失败
  */
-function requestResult(data, status = 1) {
+function requestResult(message = '', status = 1, data) {
     if (status == 0) {
         return {
             status,
-            message: 'success',
+            message: message,
             data: data
         }
     } else {
         return {
             status,
-            message: 'error',
+            message: message,
             data: data
         }
     }
