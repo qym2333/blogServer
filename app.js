@@ -6,10 +6,11 @@ const fs = require('fs');
 const config = require('./configs/config');
 
 app.use(require('cors')()); //跨域
+// 解析 application/json
+app.use(express.json());
 app.use(express.urlencoded({
     extended: false
 })); //解析表单post请求数据
-
 /**
  *  静态数据
  */

@@ -13,8 +13,9 @@ module.exports = (app, plugin, model, config) => {
     const bcrypt = require('bcryptjs');
     const jwt = require('jsonwebtoken');
 
-    router.post('/login', async (req, res) => {
+    router.post('/login', (req, res) => {
         const userinfo = req.body; //用户提交的账号密码
+        console.log(req.body);
         if (!userinfo.username || !userinfo.password) {
             // return res.cc('用户名或密码不能为空！');
             return res.send(requestResult('用户名或密码不能为空！'));
