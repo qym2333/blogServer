@@ -11,7 +11,7 @@ async function getPage(db, page, size) {
     const result = await Promise.all([
         db.countDocuments(),
         db.find().sort({
-            time: -1
+            createTime: -1
         }).limit(Number(size)).skip(Number(size) * (page - 1))
     ]);
 

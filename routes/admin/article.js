@@ -16,10 +16,10 @@ module.exports = (app, plugin, model, config) => {
      */
     router.get('/article', async (req, res) => {
         const page = req.query.page || 1; //页码
-        const size = req.query.count || 10; //每页数量
+        const size = req.query.count || 5; //每页数量
 
         const data = await getPage(Article, page, size);
-        res.send(requestResult(data, 0))
+        res.send(requestResult('获取文章列表成功！', 0, data))
     });
 
     /**  
@@ -29,7 +29,7 @@ module.exports = (app, plugin, model, config) => {
         const data = await Article.find({
             id: req.params.id
         });
-        res.send(requestResult(data, 0));
+        res.send(requestResult('获取成功', 0, data));
     });
     /**
      * 发布文章
@@ -71,7 +71,7 @@ module.exports = (app, plugin, model, config) => {
             articleInfo.id = seq.sequence;
             result = await Article.create(articleInfo)
         }
-        res.send(requestResult(result, 0));
+        res.send(requestResult('发布文章成功', 0, result));
 
         // TODO：发送通知 Subscribe
 
@@ -91,21 +91,29 @@ module.exports = (app, plugin, model, config) => {
             req.body, (err, doc) => {
                 return doc;
             });
-        res.send(requestResult(data, 0));
+        res.send(requestResult('更新成功', 0, data));
         // res.send(req.body)
     });
     /** 
      * 删除文章
      */
     router.delete('/article/:id', async (req, res) => {
-        const data = await Article.findOneAndUpdate({
+        // const data = await Article.findOneAndUpdate({
+        //     id: req.params.id
+        // }, {
+        //     deleted: true
+        // }, (err, doc) => {
+        //     return doc;
+        // });
+        await Article.findOneAndRemove({
             id: req.params.id
-        }, {
-            deleted: true
-        }, (err, doc) => {
-            return doc;
-        });
-        res.send(requestResult(data, 0));
+        }, function (err, doc) {
+            if (err) {
+                return
+            };
+            res.send(requestResult('删除成功！', 0, doc));
+        })
+
     });
     app.use('/admin/api', router);
 }
