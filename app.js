@@ -78,4 +78,4 @@ app.use((err, req, res, next) => {
 
 require('./plugins/db')(app);
 
-app.listen(port, () => console.log(`Example app listening on http://127.0.0.1:${port}!`));
+app.listen(port, () => console.log(`Example app listening on http://127.0.0.1:${port} !`));
