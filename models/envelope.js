@@ -4,6 +4,7 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
+    id: Number,
     content: String,
     contentHtml: String,
     deleted: {

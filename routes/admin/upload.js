@@ -44,7 +44,7 @@ module.exports = (app, plugin, model, config) => {
         res.send(requestResult('上传成功', 0, data))
     })
     //删除文件
-    router.delete('/upload', async (req, res, next) => {
+    router.post('/upload/del', (req, res, next) => {
         const localFile = `./${req.body.url}`;
         fs.unlinkSync(localFile);
         res.json({
