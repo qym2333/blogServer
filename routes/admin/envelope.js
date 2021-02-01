@@ -23,9 +23,8 @@ module.exports = (app, plugin, model, config) => {
         //格式化数据中的时间
         // data.forEach(item => item._doc['time'] = dateFormat(item.time));
         const page = req.query.page || 1; //页码
-        const size = req.query.count || 50; //每页数量
+        const size = req.query.count || 7; //每页数量
         const data = await getPage(Envelope, page, size);
-
         res.send(requestResult('获取信封列表成功！', 0, data))
     });
 
@@ -71,21 +70,21 @@ module.exports = (app, plugin, model, config) => {
      */
     router.put('/envelope/:id', async (req, res) => {
         //查找并更新数据
-        const data = await Envelope.findByIdAndUpdate(req.params.id, req.body, {}, (err, doc) => {
-            if (err) return res.send(err.message);
+        const data = await Envelope.findOneAndUpdate({
+            id: req.params.id
+        }, req.body, (err, doc) => {
+            if (err) return res.send('更新失败', 1, err);
             return doc;
         });
-        res.send({
-            status: 0,
-            message: '修改成功！',
-            data: data
-        });
+        res.send(requestResult('修改成功', 0, data))
     });
     /** 
      * 根据id获得指定信
      */
     router.get('/envelope/:id', async (req, res) => {
-        const data = await Envelope.findById(req.params.id, req.body);
+        const data = await Envelope.find({
+            id: req.params.id
+        });
         // data._doc['time'] = dateFormat(data.time);
         res.send(data);
     });
