@@ -23,7 +23,7 @@ module.exports = (app, plugin, model, config) => {
         //格式化数据中的时间
         // data.forEach(item => item._doc['time'] = dateFormat(item.time));
         const page = req.query.page || 1; //页码
-        const size = req.query.count || 7; //每页数量
+        const size = req.query.count || 8; //每页数量
         const data = await getPage(Envelope, page, size);
         res.send(requestResult('获取信封列表成功！', 0, data))
     });
