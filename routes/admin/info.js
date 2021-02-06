@@ -1,8 +1,8 @@
-module.exports = (app, plugin, model, config) => {
+module.exports = (app, plugin, model) => {
   const express = require('express');
   const router = express.Router();
 
-  let { Info, Comment, Counter, Article, Envelope } = model
+  let { Info, Comment, Article, Envelope } = model
   let { dateFormat, requestResult } = plugin
 
   router.get('/info', async (req, res) => {
@@ -22,7 +22,7 @@ module.exports = (app, plugin, model, config) => {
       'envelope',     // 短语列表
       'articleCnt',   // 文章总数
       'commentCnt',   // 评论总数量
-      'unReadCnt'        // 评论未读数
+      'unread'        // 评论未读数
     ]
     const data = key.reduce((total, item, index) => {
       total[item] = result[index]

@@ -7,11 +7,11 @@ module.exports = (app, plugin, model, config) => {
 
   // 获取评论列表
   router.get('/comment', async (req, res) => {
-    const p = req.query.page || 1;
-    const s = req.query.count || 10;
+    const page = req.query.page || 1;
+    const size = req.query.count || 10;
 
-    const data = await getPage(Comment, p, s)
-    res.send(requestResult(data))
+    const data = await getPage(Comment, page, size)
+    res.send(requestResult('', 0, data))
   })
 
   // 删除评论
