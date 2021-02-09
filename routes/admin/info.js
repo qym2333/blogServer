@@ -8,8 +8,8 @@ module.exports = (app, plugin, model) => {
   router.get('/info', async (req, res) => {
     const result = await Promise.all([
       Info.findOne(),
-      Article.findOne().sort({ time: -1 }),
-      Envelope.find().sort({ time: -1 }).limit(8),
+      Article.findOne().sort({ createTime: -1 }),
+      Envelope.find().sort({ createTime: -1 }).limit(8),
       Article.countDocuments(),
       Comment.countDocuments(),
       Comment.find({ status: 1 }).countDocuments()
