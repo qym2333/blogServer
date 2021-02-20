@@ -9,7 +9,7 @@ module.exports = (app, plugin, model) => {
     const result = await Promise.all([
       Info.findOne(),
       Article.findOne().sort({ createTime: -1 }),
-      Envelope.find().sort({ createTime: -1 }).limit(8),
+      Envelope.find({ deleted: false }).sort({ createTime: -1 }).limit(8),
       Article.countDocuments(),
       Comment.countDocuments(),
       Comment.find({ status: 1 }).countDocuments()
