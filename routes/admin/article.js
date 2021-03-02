@@ -18,8 +18,8 @@ module.exports = (app, plugin, model, config) => {
         const page = req.query.page || 1; //页码
         const size = req.query.count || 5; //每页数量
 
-        const data = await getPage(Article, page, size);
-        res.send(requestResult('获取文章列表成功！', 0, data))
+        const { data } = await getPage(Article, page, size);
+        new requestResult(data, '获取文章列表成功！').success(res)
     });
 
     /**  
@@ -29,7 +29,12 @@ module.exports = (app, plugin, model, config) => {
         const data = await Article.find({
             id: req.params.id
         });
-        res.send(requestResult('获取成功', 0, data));
+        if (data.length > 0) {
+            new requestResult(data, '获取成功！').success(res)
+        }
+        else {
+            new requestResult('获取失败！').fail(res)
+        }
     });
     /**
      * 发布文章
@@ -48,7 +53,7 @@ module.exports = (app, plugin, model, config) => {
             new: true
         });
 
-        let result = null;
+        // let result = null;
         //上传的文章信息
         const articleInfo = {
             ...req.body,
@@ -57,7 +62,7 @@ module.exports = (app, plugin, model, config) => {
             // 自定义id
             // req.body.data.id = articleId.sequence;
             articleInfo.id = articleId.sequence;
-            result = await Article.create(articleInfo)
+            // result = await Article.create(articleInfo)
         } else {
             /**
              * 第一次发表文章
@@ -69,10 +74,14 @@ module.exports = (app, plugin, model, config) => {
             }
             const seq = await Counter.create(seqData);
             articleInfo.id = seq.sequence;
-            result = await Article.create(articleInfo)
+            // result = await Article.create(articleInfo)
         }
-        res.send(requestResult('发布文章成功', 0, result));
-
+        try {
+            const result = await Article.create(articleInfo)
+            new requestResult(result, '发布文章成功').success(res)
+        } catch (err) {
+            new requestResult(null, '发布文章失败', err).fail(res)
+        }
         // TODO：发送通知 Subscribe
 
     });
@@ -86,8 +95,8 @@ module.exports = (app, plugin, model, config) => {
         // console.log(articleInfo);
 
         const data = await Article.findOneAndUpdate({
-                id: req.params.id
-            },
+            id: req.params.id
+        },
             req.body, (err, doc) => {
                 return doc;
             });

@@ -39,13 +39,13 @@ module.exports = (app, plugin, model, config) => {
     const commentCount = await Counter.findOneAndUpdate({
       name: 'comment'
     }, {
-      $inc: { 'count': 1 }
+      $inc: { 'sequence': 1 }
     }, {
       new: true
     })
 
     // 添加评论id
-    req.body.data.id = commentCount.count;
+    req.body.data.id = commentCount.sequence;
     const result = await Comment.create(req.body.data)
 
     res.send(requestResult('', 0, result))

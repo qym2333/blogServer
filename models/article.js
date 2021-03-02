@@ -5,9 +5,15 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
     id: Number,
-    title: String, // 标题
+    title: {
+        type: String,
+        required: true
+    }, // 标题
     words: Number, // 字数
-    content: String, // 内容
+    content: {
+        type: String,
+        required: true
+    }, // 内容
     describe: String, // 描述
     contentHtml: String, // 内容源码
     like: { // 喜欢
