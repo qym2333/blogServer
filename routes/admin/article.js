@@ -85,24 +85,19 @@ module.exports = (app, plugin, model, config) => {
         // TODO：发送通知 Subscribe
 
     });
+
     /** 
      *更新文章 
      */
     router.put('/article/:id', async (req, res) => {
-        // const articleInfo = {
-        //     ...req.body
-        // }
-        // console.log(articleInfo);
-
         const data = await Article.findOneAndUpdate({
             id: req.params.id
-        },
-            req.body, (err, doc) => {
-                return doc;
-            });
-        res.send(requestResult('更新成功', 0, data));
-        // res.send(req.body)
+        }, req.body, (err, doc) => {
+            return doc;
+        });
+        new requestResult(data, '更新成功').success(res)
     });
+
     /** 
      * 删除文章
      */
@@ -114,15 +109,15 @@ module.exports = (app, plugin, model, config) => {
         // }, (err, doc) => {
         //     return doc;
         // });
-        await Article.findOneAndRemove({
-            id: req.params.id
-        }, function (err, doc) {
-            if (err) {
-                return
-            };
-            res.send(requestResult('删除成功！', 0, doc));
-        })
+        await Article.findOneAndRemove({ id: req.params.id }, (err, doc) => {
+            if (err) return new requestResult(null, '删除失败!', err).fail(res)
+            if (doc) {
+                new requestResult('删除成功！').success(res)
+            } else {
+                new requestResult('删除失败！文章不存在。').fail(res)
+            }
 
+        })
     });
     app.use('/admin/api', router);
 }

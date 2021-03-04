@@ -34,14 +34,14 @@ module.exports = (app, plugin, model, config) => {
     //上传文件
     router.post('/upload', upload.single('file'), async (req, res, next) => {
         if (!req.file) {
-            return res.send(requestResult('文件不存在！'))
+            return new requestResult('文件不存在').fail(res)
         }
         const filePath = (req.file.path).replace(/\\/g, '\/');
         const data = {
             url: `/${filePath}`,
             message: '上传成功'
         }
-        res.send(requestResult('上传成功', 0, data))
+        new requestResult(data, '上传成功！').success(res)
     })
     //删除文件
     router.post('/upload/del', (req, res, next) => {

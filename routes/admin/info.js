@@ -28,8 +28,7 @@ module.exports = (app, plugin, model) => {
       total[item] = result[index]
       return total
     }, {})
-
-    res.send(requestResult('获取成功', 0, data))
+    new requestResult(data, '获取成功！').success(res)
   })
 
   router.post('/info', async (req, res) => {
@@ -40,10 +39,10 @@ module.exports = (app, plugin, model) => {
         (err, doc) => {
           return doc
         })
-      res.send(requestResult('提交成功', 0, result))
+      new requestResult(result, '获取成功！').success(res)
     } else {
       const result = await Info.create(req.body)
-      res.send(requestResult('提交失败', 1, result))
+      new requestResult(result, '获取失败！').fail(res)
     }
   })
 

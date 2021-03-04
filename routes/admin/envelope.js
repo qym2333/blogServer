@@ -25,7 +25,7 @@ module.exports = (app, plugin, model, config) => {
         const page = req.query.page || 1; //页码
         const size = req.query.count || 8; //每页数量
         const data = await getPage(Envelope, page, size);
-        res.send(requestResult('获取信封列表成功！', 0, data))
+        new requestResult(data, '获取信封列表成功！').success(res)
     });
 
     /** 
@@ -42,13 +42,11 @@ module.exports = (app, plugin, model, config) => {
         }, {
             new: true
         });
-        let result = null;
         const envelopeInfo = {
             ...req.body
         };
         if (envelopeId) {
             envelopeInfo.id = envelopeId.sequence;
-            result = await Envelope.create(envelopeInfo);
         } else {
             /**
              * 第一次发表文章
@@ -60,9 +58,13 @@ module.exports = (app, plugin, model, config) => {
             }
             const seq = await Counter.create(seqData);
             envelopeInfo.id = seq.sequence;
-            result = await Envelope.create(envelopeInfo);
         }
-        res.send(requestResult('发布成功！', 0, result))
+        try {
+            const result = await Envelope.create(envelopeInfo);
+            new requestResult(result, '发布成功！').success(res)
+        } catch (err) {
+            new requestResult(null, '发布失败！', err).fail(res)
+        }
     });
 
     /** 
@@ -73,10 +75,10 @@ module.exports = (app, plugin, model, config) => {
         const data = await Envelope.findOneAndUpdate({
             id: req.params.id
         }, req.body, (err, doc) => {
-            if (err) return res.send('更新失败', 1, err);
+            if (err) new requestResult(null, '更新失败', err).fail(res)
             return doc;
         });
-        res.send(requestResult('修改成功', 0, data))
+        new requestResult(data, '修改成功！').success(res)
     });
     /** 
      * 根据id获得指定信
@@ -86,7 +88,7 @@ module.exports = (app, plugin, model, config) => {
             id: req.params.id
         });
         // data._doc['time'] = dateFormat(data.time);
-        res.send(data);
+        new requestResult(data, '获取成功！').success(res)
     });
     /** 
      * 删除
@@ -104,7 +106,7 @@ module.exports = (app, plugin, model, config) => {
         }, (err, doc) => {
             return doc;
         });
-        res.send(requestResult('删除成功', 0, data))
+        new requestResult(data, '删除成功！').success(res)
     })
     app.use('/admin/api', router);
 }

@@ -13,17 +13,17 @@ module.exports = (app, plugin, model, config) => {
         _id, req.body, (err, doc) => {
           return doc
         })
-      res.send(requestResult('编辑成功', 0, result))
+      new requestResult(result, '编辑成功！').success(res)
     } else {
       const result = await Myself.create(req.body)
-      res.send(requestResult('提交成功', 0, result))
+      new requestResult(result, '编辑成功！').success(res)
     }
   })
 
   // 获取个人简介
   router.get('/myself', async (req, res) => {
     const result = await Myself.findOne()
-    res.send(requestResult('获取成功', 0, result))
+    new requestResult(result, '编辑成功！').success(res)
   })
 
   app.use('/admin/api', router)
